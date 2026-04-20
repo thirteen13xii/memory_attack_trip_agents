@@ -1,0 +1,38 @@
+System Prompt:
+###You are a professional trip planner. 
+####Based on the assessment suggestions(The assessment suggestions here are those targeting the existing plan. To avoid confusion with other suggestions, they are specifically referred to as AS here.), shared memory information,user input and existing tool search results(Supplementary information obtained from past use of tools), determine the main locations for the trip and if need tool to use to gather information.
+###If there are no AS, it indicates that you are entering this section for the first time, and you need to call tools to gather information
+###If there are AS, please determine whether the existing information is sufficient for making modifications based on the suggestions—if not, you also need to call tools.
+###Determine whether it is necessary to use the tool(For example, no existing tool search results, or additional tool information is needed.), and if not,format your response as a JSON object with keys: route (array of destinations), and description.
+like:
+{
+  "route": ["Destination 1", "Destination 2", "Destination 3"],
+  "description": "A detailed description of the trip route, including the highlights of each destination and the overall travel experience."
+}
+###If there are tool call results, please remember that the tool returns JSON data of tourist spot rankings. You need to determine the travel route based on the ranking suggestions and route planning.
+###The plan should include a sequence of destinations and brief descriptions of each destination. 
+###Focus on the route itself, not on daily schedules or specific activities. 
+###Only consider which locations are suitable to include in the travel route, without taking time factors into account.
+###If there are AS and determine that the information is sufficient(no tool call is needed), please consider them together with the existing tool search results.Generate a JSON response based on the information from both sources.
+
+
+User Prompt:
+# AS:
+
+
+# Shared Memory Information:
+- {'agent': 'Trip Planner', 'prompt': 'Plan trip based on tool results and user input', 'answer': '{}', 'timestamp': '2026-04-07T17:37:13.122633'}
+- {'agent': 'Trip Planner', 'prompt': 'Plan trip based on tool results and user input', 'answer': '{}', 'timestamp': '2026-04-07T17:37:16.531001'}
+- {'agent': 'Trip Planner', 'prompt': 'Plan trip based on tool results and user input', 'answer': '{}', 'timestamp': '2026-04-07T17:37:19.789610'}
+
+# User Input
+User query: I want to plan a trip to China for 7 days
+
+User preferences: {}
+
+#Existing tool search results
+search results:[]
+
+
+Response:
+content='I see you want to plan a 7-day trip to China. Since there are no assessment suggestions and no existing tool search results, I need to gather information about tourist attractions in China to help plan your route.' additional_kwargs={'refusal': None} response_metadata={'token_usage': {'completion_tokens': 90, 'prompt_tokens': 1003, 'total_tokens': 1093, 'completion_tokens_details': None, 'prompt_tokens_details': {'audio_tokens': None, 'cached_tokens': 0}, 'prompt_cache_hit_tokens': 0, 'prompt_cache_miss_tokens': 1003}, 'model_provider': 'openai', 'model_name': 'deepseek-chat', 'system_fingerprint': 'fp_eaab8d114b_prod0820_fp8_kvcache_new_kvcache_20260410', 'id': '880afab5-4f5e-460d-91f4-5d1e69544392', 'finish_reason': 'tool_calls', 'logprobs': None} id='lc_run--019daa33-e961-7222-b86f-a8af8c98b807-0' tool_calls=[{'name': 'search_tourist_attractions', 'args': {'location': 'China'}, 'id': 'call_00_OYmn7Nte2BY8H4YiV1BAfuhF', 'type': 'tool_call'}] invalid_tool_calls=[] usage_metadata={'input_tokens': 1003, 'output_tokens': 90, 'total_tokens': 1093, 'input_token_details': {'cache_read': 0}, 'output_token_details': {}}

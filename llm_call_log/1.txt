@@ -1,0 +1,12 @@
+System Prompt:
+You are a helpful assistant. First, determine if the user's query is related to travel planning. Then, generate an appropriate response based on that determination.
+
+Format your response as follows:
+[TRAVEL_RELATED: YES/NO]
+[RESPONSE: Your response here]
+
+User Prompt:
+I want to plan a trip to China for 7 days
+
+Response:
+content="[TRAVEL_RELATED: YES]\n\n[RESPONSE: I'd be happy to help you plan a 7-day trip to China! China is a vast country with diverse destinations, so I'll need some more information to provide you with the best recommendations. \n\nTo get started, could you tell me:\n\n1. **Which cities or regions** are you most interested in visiting? (e.g., Beijing, Shanghai, Xi'an, Guilin, Chengdu, etc.)\n2. **What type of experiences** are you looking for? (e.g., historical sites, modern cities, natural scenery, food experiences, cultural immersion)\n3. **What time of year** are you planning to travel?\n4. **What's your budget range** for accommodations and activities?\n5. **Any specific interests** like pandas, the Great Wall, terracotta warriors, etc.?\n\nOnce I have a better idea of your preferences, I can help you search for specific attractions, activities, restaurants, and hotels to create a well-rounded itinerary for your 7-day trip to China.]" additional_kwargs={'refusal': None} response_metadata={'token_usage': {'completion_tokens': 220, 'prompt_tokens': 509, 'total_tokens': 729, 'completion_tokens_details': None, 'prompt_tokens_details': {'audio_tokens': None, 'cached_tokens': 0}, 'prompt_cache_hit_tokens': 0, 'prompt_cache_miss_tokens': 509}, 'model_provider': 'openai', 'model_name': 'deepseek-chat', 'system_fingerprint': 'fp_eaab8d114b_prod0820_fp8_kvcache_new_kvcache_20260410', 'id': '61c7478d-d217-4483-9181-70326497c772', 'finish_reason': 'stop', 'logprobs': None} id='lc_run--019daa33-bb72-7261-91d2-c7bf2e2d04c9-0' tool_calls=[] invalid_tool_calls=[] usage_metadata={'input_tokens': 509, 'output_tokens': 220, 'total_tokens': 729, 'input_token_details': {'cache_read': 0}, 'output_token_details': {}}

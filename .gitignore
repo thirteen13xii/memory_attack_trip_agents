@@ -1,0 +1,8 @@
+# 忽略主目录下的 all-mpnet-base-v2 文件夹
+/all-mpnet-base-v2/
+
+/__pycache__/
+
+/agents/__pycache__/
+
+/tools/__pycache__/
