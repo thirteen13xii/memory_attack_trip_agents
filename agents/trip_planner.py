@@ -46,21 +46,21 @@ def trip_planner(state: State) -> State:
     # Check if last message is a tool message
     is_tool_message = False
     tool_result = None
-    search_activities_results = state.get("search_activities_results", [])
+    search_attractions_results = state.get("search_attractions_results", [])
     if messages:
         last_message = messages[-1]
         if hasattr(last_message, "tool_call_id") and last_message.tool_call_id:
             is_tool_message = True
             tool_result = last_message.content
-            # Parse tool_result as JSON and add to search_activities_results
+            # Parse tool_result as JSON and add to search_attractions_results
             try:
                 cleaned_tool_result = clean_json_string(tool_result)
                 tool_json = json.loads(cleaned_tool_result)
-                # Ensure search_activities_results is a list
-                if not isinstance(search_activities_results, list):
-                    search_activities_results = []
+                # Ensure search_attractions_results is a list
+                if not isinstance(search_attractions_results, list):
+                    search_attractions_results = []
                 # Add the parsed tool result to the list
-                search_activities_results.append(tool_json)
+                search_attractions_results.append(tool_json)
             except json.JSONDecodeError as e:
                 print(f"Error parsing tool result as JSON: {e}")
             except Exception as e:
@@ -80,9 +80,10 @@ def trip_planner(state: State) -> State:
 ###Determine whether it is necessary to use the tool(For example, no existing tool search results, or additional tool information is needed.), and if not,format your response as a JSON object with keys: route (array of destinations), and description.
 like:
 {
-  "route": ["Destination 1", "Destination 2", "Destination 3"],
+  "route": ["shanghai-xuhui", "shanghai-baoshan", "nanjing-jiangsu","nanjing-wuxi"],
   "description": "A detailed description of the trip route, including the highlights of each destination and the overall travel experience."
 }
+###All the above route locations should be labeled in the format of "Level 1 Area-Level 2 Area", where Level 1 Area refers to the division of the target place, and Level 2 Area refers to the division of the Level 1 Area.
 ###If there are tool call results, please remember that the tool returns JSON data of tourist spot rankings. You need to determine the travel route based on the ranking suggestions and route planning.
 ###The plan should include a sequence of destinations and brief descriptions of each destination. 
 ###Focus on the route itself, not on daily schedules or specific activities. 
@@ -102,7 +103,7 @@ User query: {user_query}
 User preferences: {user_preferences}
 
 #Existing tool search results
-search results:{search_activities_results}
+search results:{search_attractions_results}
 """
 
         result = call_llm(system_prompt, user_prompt)
@@ -141,9 +142,10 @@ search results:{search_activities_results}
 ###Format your response as a JSON object with keys: route (array of destinations), and description.
 like:
 {
-  "route": ["Destination 1", "Destination 2", "Destination 3"],
+  "route": ["shanghai-xuhui", "shanghai-baoshan", "nanjing-jiangsu","nanjing-wuxi"],
   "description": "A detailed description of the trip route, including the highlights of each destination and the overall travel experience."
 }
+###All the above route locations should be labeled in the format of "Level 1 Area-Level 2 Area", where Level 1 Area refers to the division of the target place, and Level 2 Area refers to the division of the Level 1 Area.
 ###The plan should include a sequence of destinations and brief descriptions of each destination. 
 ###Focus on the route itself, not on daily schedules or specific activities. 
 ###Only consider which locations are suitable to include in the travel route, without taking time factors into account.
@@ -162,7 +164,7 @@ User query: {user_query}
 User preferences: {user_preferences}
 
 #Existing tool search results
-search results:{search_activities_results}
+search results:{search_attractions_results}
 """
 
         result = call_llm_without_tools(system_prompt, user_prompt)
@@ -177,7 +179,8 @@ search results:{search_activities_results}
 
         # Parse the trip plan
         try:
-            trip_plan = json.loads(content)
+            cleaned_content = clean_json_string(content)
+            trip_plan = json.loads(cleaned_content)
         except json.JSONDecodeError:
             # Fallback to default plan if JSON parsing fails
             print("can not parse content:", content)
@@ -193,5 +196,5 @@ search results:{search_activities_results}
     return {
         "messages": updated_messages,
         "trip_plan": trip_plan,
-        "search_activities_results": search_activities_results,
+        "search_attractions_results": search_attractions_results,
     }

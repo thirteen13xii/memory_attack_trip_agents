@@ -5,7 +5,7 @@ def search_tourist_attractions(location: str):
     """Search for tourist attractions in a location.
 
     Args:
-        location: The location to search in (e.g., "Paris, France")
+        location: The location to search in (e.g., "Paris, France").Only enter one large location (where the user wants to go), and do not enter small locations like 'Beijing, China'.
 
     Returns:
         A dictionary with search results in the format:
