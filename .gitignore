@@ -6,3 +6,7 @@
 /agents/__pycache__/
 
 /tools/__pycache__/
+
+/memory/
+
+/llm_call_log/
