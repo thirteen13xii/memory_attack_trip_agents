@@ -19,4 +19,4 @@ class State(TypedDict):
     phone_number: str
     search_activities_results: list[dict]
     search_attractions_results: list[dict]
-    tool_use_num: 1
+    tool_use_num: int

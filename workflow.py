@@ -32,7 +32,7 @@ def should_continue(state: State):
     last_message = messages[-1]
     if hasattr(last_message, "tool_calls") and last_message.tool_calls:
         return "tools"
-    return "meeting_scheduler"
+    return "assessment_agent"
 
 
 def should_continue_recommendation_agent(state: State):
@@ -55,8 +55,8 @@ def tool_to_node(state: State):
             return "recommendation_agent"
         elif tool_name == "search_tourist_attractions":
             return "trip_planner"
-    print("error no tool has used, return meeting_scheduler,and tool msg is ", msg)
-    return "meeting_scheduler"
+    print("error no tool has used, return assessment_agent,and tool msg is ", msg)
+    return "assessment_agent"
 
 
 # Build workflow
@@ -94,15 +94,12 @@ workflow.add_conditional_edges(
     ["tools", "recommendation_agent"],
 )
 workflow.add_conditional_edges(
-    "recommendation_agent", should_continue, ["tools", "meeting_scheduler"]
+    "recommendation_agent", should_continue, ["tools", "assessment_agent"]
 )
 # Add conditional edge from tool_node based on tool used
 workflow.add_conditional_edges(
-    "tools", tool_to_node, ["recommendation_agent", "trip_planner", "meeting_scheduler"]
+    "tools", tool_to_node, ["recommendation_agent", "trip_planner", "assessment_agent"]
 )
-# Add edge from meeting_scheduler to assessment_agent
-workflow.add_edge("meeting_scheduler", "assessment_agent")
-
 
 # Add conditional edge from assessment_agent
 workflow.add_conditional_edges(
@@ -114,9 +111,12 @@ workflow.add_conditional_edges(
     ),
     {
         "conflict": "trip_planner",  # Loop back to planning if conflict
-        "no_conflict": "report_generator",
+        "no_conflict": "meeting_scheduler",  # Proceed to meeting scheduler if no conflict
     },
 )
+
+# Add edge from meeting_scheduler to report_generator
+workflow.add_edge("meeting_scheduler", "report_generator")
 
 # Add remaining edges
 workflow.add_edge("report_generator", END)
@@ -128,7 +128,7 @@ chain = workflow.compile()
 if __name__ == "__main__":
     # Example usage
     initial_state = {
-        "user_query": "I want to plan a trip to China for 7 days",
+        "user_query": "I want to plan a trip to Japan for 7 days",
         "conversation_history": [],
         "shared_memory": [],
     }

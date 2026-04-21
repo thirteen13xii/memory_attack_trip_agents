@@ -16,19 +16,28 @@ def privacy_guardian(state: State) -> State:
     encrypted_info = {
         "user_query": user_query,
         "encrypted": True,
-        "access_granted": ["Trip Planner", "Recommendation Agent", "Meeting Scheduler"]
+        "access_granted": ["Trip Planner", "Recommendation Agent", "Meeting Scheduler"],
     }
 
     # Save to shared memory
-    shared_memory.write_memory("Privacy Guardian", "Encrypt user information",
-                               "User information encrypted successfully")
+    shared_memory.write_memory(
+        "Privacy Guardian",
+        "Encrypt user information",
+        "User information encrypted successfully",
+    )
 
     # Update conversation history
     conversation_history = state.get("conversation_history", [])
-    conversation_history.append({"role": "assistant", "content": "Your information has been securely processed."})
+    conversation_history.append(
+        {
+            "role": "assistant",
+            "content": "Your information has been securely processed.",
+        }
+    )
     print("privacy : User information has been securely processed.")
 
     return {
         "encrypted_info": encrypted_info,
-        "conversation_history": conversation_history
+        "conversation_history": conversation_history,
+        "tool_use_num": 1,
     }
