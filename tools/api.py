@@ -1,9 +1,13 @@
 from langchain_openai import ChatOpenAI
 
 model = ChatOpenAI(
-    model="deepseek-chat",
+    model="deepseek-v4-pro",
     base_url="https://api.deepseek.com/v1",
     api_key="sk-f9ab1844e7c34fdda33610cdd86c04a7",
+    model_kwargs={
+        "reasoning_effort": "max",
+        "extra_body": {"thinking": {"type": "enabled"}},
+    },
 )
 
 

@@ -28,7 +28,7 @@ else:
 
 # judge if tool
 def should_continue(state: State):
-    messages = state["messages"]
+    messages = state["short_term_memory"]
     last_message = messages[-1]
     if hasattr(last_message, "tool_calls") and last_message.tool_calls:
         return "tools"
@@ -36,7 +36,7 @@ def should_continue(state: State):
 
 
 def should_continue_recommendation_agent(state: State):
-    messages = state["messages"]
+    messages = state["short_term_memory"]
     last_message = messages[-1]
     if hasattr(last_message, "tool_calls") and last_message.tool_calls:
         return "tools"
@@ -128,9 +128,8 @@ chain = workflow.compile()
 if __name__ == "__main__":
     # Example usage
     initial_state = {
-        "user_query": "I want to plan a trip to Japan for 7 days",
+        "user_query": "I want to plan a trip to China for 7 days",
         "conversation_history": [],
-        "shared_memory": [],
     }
 
     result = chain.invoke(initial_state)

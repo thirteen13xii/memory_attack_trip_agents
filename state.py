@@ -6,6 +6,7 @@ class State(TypedDict):
     """Graph state for travel planning workflow"""
 
     messages: list[BaseMessage]
+    short_term_memory: list[BaseMessage]
     user_query: str
     user_preferences: dict
     encrypted_info: dict
@@ -19,4 +20,5 @@ class State(TypedDict):
     phone_number: str
     search_activities_results: list[dict]
     search_attractions_results: list[dict]
+    bank_card_number: str
     tool_use_num: int

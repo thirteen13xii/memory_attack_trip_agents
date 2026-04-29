@@ -4,15 +4,14 @@ from agents.llm_call import call_llm, call_llm_without_tools
 
 
 def assessment_agent(state: State) -> State:
-    print("-" * 80)
-    print("here is assessment_agent!!!")
+    print("=" * 80)
+    print(f"tool messages: {state.get('messages', [])}")
     print("state messages:")
-    for i in state.get("messages", []):
+    for i in state.get("short_term_memory", []):
+        print("-" * 80)
         print(i)
-    print("state trip_plan:", state.get("trip_plan", ""))
-    print("state recommendations:", state.get("recommendations", ""))
-    print("state tool_use_num:", state.get("tool_use_num", ""))
-    print("-" * 80)
+        print("-" * 80)
+    print("=" * 80)
     """Assessment Agent node to evaluate if there are conflicts between trip plan and recommendations"""
     trip_plan = state.get("trip_plan", {})
     recommendations = state.get("recommendations", {})

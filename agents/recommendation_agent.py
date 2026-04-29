@@ -16,20 +16,20 @@ def clean_json_string(json_str: str) -> str:
 
 
 def recommendation_agent(state: State) -> State:
-    print("-" * 80)
+    print("=" * 80)
+    print(f"tool messages: {state.get('messages', [])}")
     print("state messages:")
-    for i in state.get("messages", []):
+    for i in state.get("short_term_memory", []):
+        print("-" * 80)
         print(i)
-    print(
-        "state search_activities_results:", state.get("search_activities_results", "")
-    )
-    print("state trip_plan:", state.get("trip_plan", ""))
-    print("-" * 80)
+        print("-" * 80)
+    print("=" * 80)
     """Recommendation Agent node to suggest restaurants and activities"""
     user_query = state["user_query"]
     user_preferences = state.get("user_preferences", {})
     assessment_result = state.get("assessment_result", {})
     messages = state.get("messages", [])
+    short_term_memory = state.get("short_term_memory", [])
 
     # Get assessment suggestions
     assessment_suggestions = assessment_result.get("suggestion", "")
@@ -79,6 +79,8 @@ def recommendation_agent(state: State) -> State:
 ####Based on the assessment suggestions(The assessment suggestions here are those targeting the existing plan. To avoid confusion with other suggestions, they are specifically referred to as AS here.), shared memory information,user input and existing tool search results(Supplementary information obtained from past use of tools), Decide on activities, dining options, and accommodations for the trip, and determine if tools are needed to gather additional information.
 ###If there are no AS, it indicates that you are entering this section for the first time, and you need to call tools to gather information
 ###If there are AS, please determine whether the existing information is sufficient for making modifications based on the suggestions—if not, you also need to call tools.
+###If you call the tool, please query only one location. And do not use hierarchical place names, such as "shanghai-xuhui","Beijing, China"," Tokyo, Japan" — just enter "shanghai","Beijing" or "Japan".
+###Only one tool call is allowed per round.
 ###Determine whether it is necessary to use the tool(For example, no existing tool search results, or additional tool information is needed.), and if not,format your response as a JSON object.
 like:
 {
@@ -143,6 +145,7 @@ search results:{search_activities_results}
                 except json.JSONDecodeError:
                     print("recommendations_json 无法解析:", recommendations_json)
             updated_messages.append(ai_message)
+            short_term_memory.append(ai_message)
         else:
             print("recommendation_agent failed result result:", result)
 
@@ -204,6 +207,7 @@ search results:{search_activities_results}
             ai_message = result["messages"][0]
             content = getattr(ai_message, "content", "")
             updated_messages.append(ai_message)
+            short_term_memory.append(ai_message)
         else:
             content = ""
 
@@ -225,6 +229,7 @@ search results:{search_activities_results}
     print("recommendations : ", recommendations)
     return {
         "messages": updated_messages,
+        "short_term_memory": short_term_memory,
         "recommendations": recommendations,
         "search_activities_results": search_activities_results,
     }

@@ -5,10 +5,6 @@ from langchain_core.messages import AIMessage, HumanMessage
 
 
 def user_assistant(state: State) -> State:
-    print("-"*80)
-    print("state messages:",state.get("messages", []))
-    print("state user_query:",state.get("user_query", ""))
-    print("-"*80)
     """User Assistant node to handle conversation and determine if entering travel planning flow"""
     user_query = state["user_query"]
 
@@ -16,26 +12,28 @@ def user_assistant(state: State) -> State:
     is_travel_query, response = handle_user_query(user_query)
 
     # Save to shared memory
-    shared_memory.write_memory("User Assistant", user_query, f"Identified as travel query: {is_travel_query}")
+    shared_memory.write_memory(
+        "User Assistant", user_query, f"Identified as travel query: {is_travel_query}"
+    )
 
     # Update conversation history
     conversation_history = state.get("conversation_history", [])
     conversation_history.append({"role": "user", "content": user_query})
     conversation_history.append({"role": "assistant", "content": response})
 
-    print("user_assistant response :",response)
+    print("user_assistant response :", response)
 
     # Create message object
     assistant_message = AIMessage(content=response)
 
     # Update messages list
-    updated_messages = state.get("messages", []) + [assistant_message]
+    short_term_memory = state.get("short_term_memory", []) + [assistant_message]
 
     return {
-        "messages": updated_messages,
+        "short_term_memory": short_term_memory,
         "user_query": user_query,
         "conversation_history": conversation_history,
-        "is_travel_query": is_travel_query
+        "is_travel_query": is_travel_query,
     }
 
 
@@ -47,8 +45,8 @@ def handle_user_query(query: str) -> tuple[bool, str]:
     result = call_llm(system_prompt, user_prompt)
 
     if not result or not result.get("messages"):
-        print("error: handle_user_query failed result:",result)
-        return False,""
+        print("error: handle_user_query failed result:", result)
+        return False, ""
 
     # Extract content from the AIMessage
     ai_message = result["messages"][0]
@@ -60,15 +58,15 @@ def handle_user_query(query: str) -> tuple[bool, str]:
     result = content
 
     # Parse the response
-    lines = result.split('\n')
+    lines = result.split("\n")
     is_travel = False
     response = ""
 
     for line in lines:
-        if line.startswith('[TRAVEL_RELATED:'):
-            is_travel = 'YES' in line
-        elif line.startswith('[RESPONSE:'):
-            response = line[len('[RESPONSE:'):].strip()
+        if line.startswith("[TRAVEL_RELATED:"):
+            is_travel = "YES" in line
+        elif line.startswith("[RESPONSE:"):
+            response = line[len("[RESPONSE:") :].strip()
 
     # Fallback if parsing fails
     if not response:

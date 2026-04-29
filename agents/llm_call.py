@@ -6,9 +6,13 @@ from tools.search_activities_restaurants_hotels import (
 from tools.search_tourist_attractions import search_tourist_attractions
 
 model = ChatOpenAI(
-    model="deepseek-chat",
+    model="deepseek-v4-pro",
     base_url="https://api.deepseek.com/v1",
     api_key="sk-f9ab1844e7c34fdda33610cdd86c04a7",
+    model_kwargs={
+        "reasoning_effort": "max",
+        "extra_body": {"thinking": {"type": "enabled"}},
+    },
 )
 
 model_with_tools = model.bind_tools(
@@ -83,5 +87,5 @@ def save_llm_log(system_prompt: str, user_prompt: str, response):
 
 
 if __name__ == "__main__":
-    result = call_llm("你是一个故人，请用文言文回复", "你好")
+    result = call_llm("", "你是什么模型")
     print(result)
