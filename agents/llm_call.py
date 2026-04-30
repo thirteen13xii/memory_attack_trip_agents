@@ -1,5 +1,5 @@
 import os
-from langchain_openai import ChatOpenAI
+from langchain_openai import ChatOpenAI, AzureChatOpenAI
 from tools.search_activities_restaurants_hotels import (
     search_activities_restaurants_hotels,
 )
